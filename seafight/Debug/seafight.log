@@ -1,0 +1,4 @@
+﻿  Player.cpp
+d:\projects\c++\seafight\seafight\player.cpp(37): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  seafight.vcxproj -> D:\Projects\C++\seafight\Debug\seafight.exe
+  seafight.vcxproj -> D:\Projects\C++\seafight\Debug\seafight.pdb (Full PDB)
