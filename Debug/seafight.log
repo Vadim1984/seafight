@@ -1,4 +1,9 @@
-﻿  Player.cpp
-d:\myprojects\c++\seafight\seafight\seafight\player.cpp(38): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  seafight.vcxproj -> D:\MyProjects\C++\seafight\seafight\Debug\seafight.exe
-  seafight.vcxproj -> D:\MyProjects\C++\seafight\seafight\Debug\seafight.pdb (Full PDB)
+﻿  Ship.cpp
+  Board.cpp
+d:\projects\c++\seafight\board.cpp(19): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  Создание кода...
+  Компиляция...
+  App.cpp
+  Создание кода...
+  seafight.vcxproj -> D:\Projects\C++\seafight\Debug\seafight.exe
+  seafight.vcxproj -> D:\Projects\C++\seafight\Debug\seafight.pdb (Full PDB)
