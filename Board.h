@@ -26,5 +26,6 @@ public:
 	const Ship calcShipCoordinates(int);
 	void setShip(const Ship&);
 	void display();
+	bool isHit(int, int);
 
 };

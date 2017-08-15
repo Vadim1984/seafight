@@ -3,9 +3,9 @@
 
 using namespace std;
 
-/*
-* Constructor set ship size and coordinates
-*/
+/********************************************
+ * Constructor set ship size and coordinates
+ ********************************************/
 Ship::Ship(int size, int startX, int endX, int startY, int endY)
 {
 	this->size = size;
@@ -20,9 +20,9 @@ Ship::~Ship()
 {
 }
 
-/*
+/************************************
  * Getters ship size and coordinates
- */
+ ************************************/
 
 int Ship::getShipSize()
 {

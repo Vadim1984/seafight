@@ -3,13 +3,16 @@
 
 using namespace std;
 
+/**************
+ * Constructor
+ **************/
 Board::Board()
 {
 	shipsMap = { 
-		           { "fourDecks", 1 },
+		           { "fourDecks",  1 },
 	               { "threeDecks", 2 },
-	               { "twoDecks", 3 },
-	               { "oneDecks", 4 } 
+	               { "twoDecks",   3 },
+	               { "oneDecks",   4 } 
 	};
 
 	for (int i = 0; i < SIZE; i++)
@@ -23,6 +26,12 @@ Board::~Board()
 {
 }
 
+
+
+/********************************************************************************
+ * In loop create random coordinates and random direction for the setting ship.
+ * Analyze if no ship near current ship.
+ ********************************************************************************/
 const Ship Board::calcShipCoordinates(int shipSize)
 {
 	cout << "shipSize: " << shipSize << endl;
@@ -118,6 +127,10 @@ const Ship Board::calcShipCoordinates(int shipSize)
 	return Ship(shipSize, startX, endX, startY, endY);
 }
 
+
+/**********************************************
+ * Set ship to play board by it's coorninates
+ **********************************************/
 void Board::setShip(const Ship& ship) {
 	// set ship!!!!
 	int startX = ship.getShipStartX();
@@ -146,7 +159,9 @@ void Board::setShip(const Ship& ship) {
 	}
 }
 
-
+/******************************************
+ * Check possibility of set ship vertical
+ ******************************************/
 bool Board::setShipVertical(char matrix[SIZE][SIZE], int startX, int startY, int endY)
 {
 	bool shipSetted = true;
@@ -156,11 +171,11 @@ bool Board::setShipVertical(char matrix[SIZE][SIZE], int startX, int startY, int
 
 	int begin, end;
 
-	if (startY < endY) {
+	if (startY < endY) {               /* case when ship is setted DOWN */
 		begin = startY;
 		end = endY;
 	}
-	else if (startY > endY) {
+	else if (startY > endY) {          /* case when ship is setted UP */
 		begin = endY;
 		end = startY;
 	}
@@ -243,7 +258,9 @@ bool Board::setShipVertical(char matrix[SIZE][SIZE], int startX, int startY, int
 	return shipSetted;
 }
 
-
+/***********************************************
+ * Check possibility of set ship horisontal
+ **********************************************/
 bool Board::setShipHorizontal(char matrix[SIZE][SIZE], int startX, int startY, int endX)
 {
 	bool shipSetted = true;
@@ -253,11 +270,11 @@ bool Board::setShipHorizontal(char matrix[SIZE][SIZE], int startX, int startY, i
 
 	int begin, end;
 
-	if (startX < endX) {
+	if (startX < endX) {           /* case when ship is setted LEFT */
 		begin = startX;
 		end = endX;
 	}
-	else if (startX > endX) {
+	else if (startX > endX) {      /* case when ship is setted RIGHT */
 		begin = endX;
 		end = startX;
 	}
@@ -341,7 +358,9 @@ bool Board::setShipHorizontal(char matrix[SIZE][SIZE], int startX, int startY, i
 }
 
 
-
+/************************
+ * Display play board
+ ***********************/
 void Board::display()
 {
 	cout << "----------------------------------------" <<  endl;
@@ -359,6 +378,23 @@ void Board::display()
 
 	cout << endl;
 	cout << "----------------------------------------" << endl;
+}
+
+/*******************************
+ * Check if player hit the ship
+ *******************************/
+bool Board::isHit(int x, int y) {
+
+	bool hit;
+
+	if (matrix[y][x] == SHIP) {
+		hit = true;
+	}
+	else {
+		hit = false;
+	}
+
+	return hit;
 }
 
 
