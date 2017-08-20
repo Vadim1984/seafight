@@ -8,18 +8,41 @@ using namespace std;
  **************/
 Board::Board()
 {
-	shipsMap = { 
+	shipsCountMap_ = {
 		           { "fourDecks",  1 },
 	               { "threeDecks", 2 },
 	               { "twoDecks",   3 },
 	               { "oneDecks",   4 } 
 	};
 
+	shipsCountMap_ = {
+		{ "fourDecks",  4 },
+		{ "threeDecks", 3 },
+		{ "twoDecks",   2 },
+		{ "oneDecks",   1 }
+	};
+
 	for (int i = 0; i < SIZE; i++)
 		for (int j = 0; j < SIZE; j++)
-			matrix[i][j] = ' ';
+			matrix_[i][j] = ' ';
 
 	srand(time(NULL));
+
+	nCrashedShips_ = 0;
+
+	ships_.reserve(10);
+	ships_.push_back(computeShipCoord(4));
+	ships_.push_back(computeShipCoord(3));
+	ships_.push_back(computeShipCoord(3));
+	ships_.push_back(computeShipCoord(2));
+	ships_.push_back(computeShipCoord(2));
+	ships_.push_back(computeShipCoord(2));
+	ships_.push_back(computeShipCoord(1));
+	ships_.push_back(computeShipCoord(1));
+	ships_.push_back(computeShipCoord(1));
+	ships_.push_back(computeShipCoord(1));
+
+	display();
 }
 
 Board::~Board()
@@ -32,10 +55,8 @@ Board::~Board()
  * In loop create random coordinates and random direction for the setting ship.
  * Analyze if no ship near current ship.
  ********************************************************************************/
-const Ship Board::calcShipCoordinates(int shipSize)
+const Ship Board::computeShipCoord(int shipSize)
 {
-	cout << "shipSize: " << shipSize << endl;
-
 	const int UP = 0;
 	const int RIGHT = 1;
 	const int DOWN = 2;
@@ -48,121 +69,102 @@ const Ship Board::calcShipCoordinates(int shipSize)
 
 	while (!shipSetted) {
 
-		startX = rand() % 10;
-		startY = rand() % 10;
-		cout << "  startX: " << startX << endl;
-		cout << "  startY: " << startY << endl;
-		wasUP = false;
-		wasDOWN = false;
+        startX = rand() % 10;
+        startY = rand() % 10;
+
+        wasUP = false;
+        wasDOWN = false;
 		wasLEFT = false;
 		wasRIGHT = false;
 
-			while ((!wasUP || !wasDOWN || !wasLEFT || !wasRIGHT) && !shipSetted ) {
-				int direction = rand() % 4;
-				int range;
+		while ((!wasUP || !wasDOWN || !wasLEFT || !wasRIGHT) && !shipSetted ) {
+			int direction = rand() % 4;
+			int range;
 
-				cout << "     direction: " << direction << endl;
-
-				switch (direction) {
-				case UP: 
-					wasUP = true;
-					range = startY - shipSize + 1;
-					shipSetted = setShipVertical(matrix, startX, startY, range);
-					if (shipSetted) {
-						endY = range;
-						endX = startX;
-					}
-					break;       
-				case DOWN: 
-					wasDOWN = true;
-					range = startY + shipSize - 1;
-					shipSetted = setShipVertical(matrix, startX, startY, range);
-					if (shipSetted) {
-						endY = range;
-						endX = startX;
-					}
-					break;
-				case LEFT: 
-					wasLEFT = true;
-					range = startX - shipSize + 1;
-					shipSetted = setShipHorizontal(matrix, startX, startY, range);
-					if (shipSetted) {
-						endX = range;
-						endY = startY;
-					}
-					break;
-				case RIGHT: 
-					wasRIGHT = true;
-					range = startX + shipSize - 1;
-					shipSetted = setShipHorizontal(matrix, startX, startY, range);
-					if (shipSetted) {
-						endX = range;
-						endY = startY;
-					}
-					break;
+			switch (direction) {
+			  case UP: 
+				wasUP = true;
+				range = startY - shipSize + 1;
+				shipSetted = isSetShipV(matrix_, startX, startY, range);
+				if (shipSetted) {
+					endY = range;
+					endX = startX;
 				}
-
-
-				cout << "     shipSetted: " << shipSetted << endl;
-				cout << "     wasUP: " << wasUP << endl;
-				cout << "     wasDOWN: " << wasDOWN << endl;
-				cout << "     wasLEFT: " << wasLEFT << endl;
-				cout << "     wasRIGHT: " << wasRIGHT << endl;
-				cout << "     *********************** " << endl;
+				break;       
+			  case DOWN: 
+				wasDOWN = true;
+				range = startY + shipSize - 1;
+				shipSetted = isSetShipV(matrix_, startX, startY, range);
+				if (shipSetted) {
+					endY = range;
+					endX = startX;
+				}
+				break;
+			  case LEFT: 
+				wasLEFT = true;
+				range = startX - shipSize + 1;
+				shipSetted = isSetShipH(matrix_, startX, startY, range);
+				if (shipSetted) {
+					endX = range;
+					endY = startY;
+				}
+				break;
+			  case RIGHT: 
+				wasRIGHT = true;
+				range = startX + shipSize - 1;
+				shipSetted = isSetShipH(matrix_, startX, startY, range);
+				if (shipSetted) {
+					endX = range;
+					endY = startY;
+				}
+				break;
+			}
 		}
-
 	}
 
-	cout << "  *********************** " << endl;
+	Ship ship = Ship(shipSize, startX, endX, startY, endY);
 
+	setShip(ship);
 
-
-	cout << "=> startX: " << startX << endl;
-	cout << "=> endX: " << endX << endl;
-	cout << "=> startY: " << startY << endl;
-	cout << "=> endY: " << endY << endl;
-	cout << "=> shipSize: " << shipSize << endl;
-	cout << "********************************************************************************* " << endl;
-
-	return Ship(shipSize, startX, endX, startY, endY);
+	return ship;
 }
 
 
 /**********************************************
  * Set ship to play board by it's coorninates
  **********************************************/
-void Board::setShip(const Ship& ship) {
+void Board::setShip(const Ship& CurrentShip) {
 	// set ship!!!!
-	int startX = ship.getShipStartX();
-	int endX = ship.getShipEndX();
-	int startY = ship.getShipStartY();
-	int endY = ship.getShipEndY();
+	int startX = CurrentShip.getShipStartX();
+	int endX = CurrentShip.getShipEndX();
+	int startY = CurrentShip.getShipStartY();
+	int endY = CurrentShip.getShipEndY();
 
 	if (startX == endX && startY < endY) {
 		for (int i = startY; i <= endY; i++)
-			matrix[i][startX] = SHIP;
+			matrix_[i][startX] = SHIP;
 	}
 	else if (startX == endX && startY > endY) {
 		for (int i = endY; i <= startY; i++)
-			matrix[i][startX] = SHIP;
+			matrix_[i][startX] = SHIP;
 	}
 	else if (startY == endY && startX < endX) {
 		for (int j = startX; j <= endX; j++)
-			matrix[startY][j] = SHIP;
+			matrix_[startY][j] = SHIP;
 	}
 	else if (startY == endY && startX > endX) {
 		for (int j = endX; j <= startX; j++)
-			matrix[startY][j] = SHIP;
+			matrix_[startY][j] = SHIP;
 	}
 	else if (startY == endY && startX == endX) {
-		matrix[startY][startX] = SHIP;
+		matrix_[startY][startX] = SHIP;
 	}
 }
 
 /******************************************
  * Check possibility of set ship vertical
  ******************************************/
-bool Board::setShipVertical(char matrix[SIZE][SIZE], int startX, int startY, int endY)
+bool Board::isSetShipV(char matrix[SIZE][SIZE], int startX, int startY, int endY)
 {
 	bool shipSetted = true;
 
@@ -261,7 +263,7 @@ bool Board::setShipVertical(char matrix[SIZE][SIZE], int startX, int startY, int
 /***********************************************
  * Check possibility of set ship horisontal
  **********************************************/
-bool Board::setShipHorizontal(char matrix[SIZE][SIZE], int startX, int startY, int endX)
+bool Board::isSetShipH(char matrix[SIZE][SIZE], int startX, int startY, int endX)
 {
 	bool shipSetted = true;
 
@@ -371,7 +373,7 @@ void Board::display()
 			if (j == 0) {
 				cout << i << "   ";
 			}
-			cout << matrix[i][j] << " ";
+			cout << matrix_[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -383,18 +385,53 @@ void Board::display()
 /*******************************
  * Check if player hit the ship
  *******************************/
-bool Board::isHit(int x, int y) {
+bool Board::isHit(int y, int x) {
 
 	bool hit;
 
-	if (matrix[y][x] == SHIP) {
+	if (matrix_[y][x] == SHIP) {
 		hit = true;
+		matrix_[y][x] = HIT_SHIP;
+		notifyShip(y, x);
 	}
 	else {
 		hit = false;
 	}
 
 	return hit;
+}
+
+
+/****************************************************
+ * Find and notify damaged ship to update ship state
+ * If whole ship is crashed then increment counter
+ ****************************************************/
+void Board::notifyShip(int y, int x) {
+
+	for (int i = 0; i < ships_.size(); i++)
+	{
+		if (ships_[i].isShipLive()) {
+			ships_[i].damage(y, x);
+			
+			if (!ships_[i].isShipLive()) {
+				++nCrashedShips_;
+			}
+		}
+	}
+}
+
+/*********************************
+ * Check if All ships are crashed
+ *********************************/
+bool Board::isAllShipCrashed() {
+
+	if (nCrashedShips_ == ships_.size()) {
+		return true;
+	}
+	else{
+		return false;
+	}
+
 }
 
 

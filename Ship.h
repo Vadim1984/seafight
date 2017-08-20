@@ -1,25 +1,51 @@
-/*
-* will be used as Model
-*/
+/************************
+ * will be used in Model
+ ************************/
 
 #pragma once
 
 class Ship
 {
-private:
-	int size;
-	int startX;
-	int endX;
-	int startY;
-	int endY;
 public:
 	Ship(int, int, int, int, int);
 	~Ship();
-	int getShipSize();
-	int getShipStartX() const;
-	int getShipEndX() const;
-	int getShipStartY() const;
-	int getShipEndY() const;
+
+	inline int Ship::getShipSize() const
+	{
+		return this->size_;
+	}
+	inline int Ship::getShipStartX() const
+	{
+		return this->startX_;
+	}
+	inline int Ship::getShipEndX() const
+	{
+		return this->endX_;
+	}
+	inline int Ship::getShipStartY() const
+	{
+		return this->startY_;
+	}
+	inline int Ship::getShipEndY() const
+	{
+		return this->endY_;
+	}
+
+	inline bool Ship::isShipLive() const
+	{
+		return this->isLive_;
+	}
+
+	bool damage(int, int);
 	void displayShipInfo();
+
+private:
+	int size_;
+	int startX_;
+	int endX_;
+	int startY_;
+	int endY_;
+	int nHits_;
+	bool isLive_;
 };
 

@@ -1,31 +1,45 @@
-/*
- * will be used as View
- */
+/*************************
+ * will be used as Model
+ *************************/
 
 #pragma once
 #include <iostream>
 #include <ctime>
 #include <map>
+#include <vector>
 #include "Ship.h"
 
 using namespace std;
 
 class Board
 {
-private:
-	static const int SIZE = 10;
-	static const char SHIP = 'X';
-	char matrix[SIZE][SIZE];
-	map <string, int> shipsMap;
-	bool setShipVertical(char[SIZE][SIZE], int, int, int);
-	bool setShipHorizontal(char[SIZE][SIZE], int, int, int);
 
 public:
 	Board();
 	~Board();
-	const Ship calcShipCoordinates(int);
-	void setShip(const Ship&);
+	bool isAllShipCrashed();
 	void display();
 	bool isHit(int, int);
+	inline int getCreashedShips() const
+	{
+		return this->nCrashedShips_;
+	}
+
+private:
+	static const int  SIZE = 10;
+	static const char SHIP = 254;
+	static const char HIT_SHIP = 'X';
+	char matrix_[SIZE][SIZE];
+	map <string, int> shipsCountMap_;
+	map <string, int> shipsSizeMap_;
+	vector<Ship> ships_;
+	int nCrashedShips_;
+
+	bool isSetShipV(char[SIZE][SIZE], int, int, int);
+	bool isSetShipH(char[SIZE][SIZE], int, int, int);
+	const Ship computeShipCoord(int);
+	void setShip(const Ship&);
+	void notifyShip(int x, int y);
+
 
 };
