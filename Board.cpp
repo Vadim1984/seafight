@@ -3,19 +3,19 @@
 
 using namespace std;
 
-/**************
- * Constructor
- **************/
+/*************************
+ * 'Board' - Constructor
+ *************************/
 Board::Board()
 {
-	shipsCountMap_ = {
-		           { "fourDecks",  1 },
-	               { "threeDecks", 2 },
-	               { "twoDecks",   3 },
-	               { "oneDecks",   4 } 
+	shipTypeCountMap_ = {
+		{ "fourDecks",  1 },
+	    { "threeDecks", 2 },
+	    { "twoDecks",   3 },
+	    { "oneDecks",   4 } 
 	};
 
-	shipsCountMap_ = {
+	shipsTypeSizeMap_ = {
 		{ "fourDecks",  4 },
 		{ "threeDecks", 3 },
 		{ "twoDecks",   2 },
@@ -31,16 +31,13 @@ Board::Board()
 	nCrashedShips_ = 0;
 
 	ships_.reserve(10);
-	ships_.push_back(computeShipCoord(4));
-	ships_.push_back(computeShipCoord(3));
-	ships_.push_back(computeShipCoord(3));
-	ships_.push_back(computeShipCoord(2));
-	ships_.push_back(computeShipCoord(2));
-	ships_.push_back(computeShipCoord(2));
-	ships_.push_back(computeShipCoord(1));
-	ships_.push_back(computeShipCoord(1));
-	ships_.push_back(computeShipCoord(1));
-	ships_.push_back(computeShipCoord(1));
+
+	// set ships coordinates according to ship count and ship size, setted in maps: shipsCountMap_, shipsSizeMap_
+	for each(pair<string, int> countShips in shipTypeCountMap_) {
+		for (int i = 0; i < countShips.second; i++) {
+			ships_.push_back(computeShipCoord(shipsTypeSizeMap_[countShips.first]));
+		}
+	}
 
 	display();
 }
@@ -51,10 +48,12 @@ Board::~Board()
 
 
 
-/********************************************************************************
- * In loop create random coordinates and random direction for the setting ship.
- * Analyze if no ship near current ship.
- ********************************************************************************/
+/****************************************************************************************************
+ * 'computeShipCoord' - In loop create random coordinates and random direction for the setting ship.
+ *                      Analyze if no ship near current ship.
+ * @param shipSize    - size of ship for which will be computed coordinates
+ * @return const Ship - return Ship object
+ ****************************************************************************************************/
 const Ship Board::computeShipCoord(int shipSize)
 {
 	const int UP = 0;
@@ -130,11 +129,12 @@ const Ship Board::computeShipCoord(int shipSize)
 }
 
 
-/**********************************************
- * Set ship to play board by it's coorninates
- **********************************************/
+/**********************************************************
+ * 'setShip' - Set ship to play board by it's coorninates
+ * @param Ship& reference to the Ship object
+ **********************************************************/
 void Board::setShip(const Ship& CurrentShip) {
-	// set ship!!!!
+
 	int startX = CurrentShip.getShipStartX();
 	int endX = CurrentShip.getShipEndX();
 	int startY = CurrentShip.getShipStartY();
@@ -161,9 +161,14 @@ void Board::setShip(const Ship& CurrentShip) {
 	}
 }
 
-/******************************************
- * Check possibility of set ship vertical
- ******************************************/
+/**************************************************************************************
+ * 'isSetShipV' - Check possibility of set ship vertical
+ * @param matrix[SIZE][SIZE] - matrix which used for analize posibility of set ship
+ * @param startX             - X coordinate of start ship
+ * @param startY             - Y coordinate of start ship
+ * @param endY               - Y coordinate of end ship
+ * @return bool              - true if set ship possible otherwise false
+ **************************************************************************************/
 bool Board::isSetShipV(char matrix[SIZE][SIZE], int startX, int startY, int endY)
 {
 	bool shipSetted = true;
@@ -260,9 +265,14 @@ bool Board::isSetShipV(char matrix[SIZE][SIZE], int startX, int startY, int endY
 	return shipSetted;
 }
 
-/***********************************************
- * Check possibility of set ship horisontal
- **********************************************/
+/**************************************************************************************
+ * 'isSetShipH' - Check possibility of set ship horisontal
+ * @param matrix[SIZE][SIZE] - matrix which used for analize posibility of set ship
+ * @param startX             - X coordinate of start ship
+ * @param startY             - Y coordinate of start ship
+ * @param endX               - X coordinate of end ship
+ * @return bool              - true if set ship possible otherwise false
+ **************************************************************************************/
 bool Board::isSetShipH(char matrix[SIZE][SIZE], int startX, int startY, int endX)
 {
 	bool shipSetted = true;
@@ -360,9 +370,9 @@ bool Board::isSetShipH(char matrix[SIZE][SIZE], int startX, int startY, int endX
 }
 
 
-/************************
- * Display play board
- ***********************/
+/**********************************
+ * 'display' - Display play board
+ **********************************/
 void Board::display()
 {
 	cout << "----------------------------------------" <<  endl;
@@ -382,9 +392,12 @@ void Board::display()
 	cout << "----------------------------------------" << endl;
 }
 
-/*******************************
- * Check if player hit the ship
- *******************************/
+/**********************************************************
+ * 'isHit' - Check if player hit the ship
+ * @param y     - Y coordinate of player step
+ * @param x     - X coordinate of player step
+ * @return bool - true if player hit the ship, else false
+ **********************************************************/
 bool Board::isHit(int y, int x) {
 
 	bool hit;
@@ -402,10 +415,12 @@ bool Board::isHit(int y, int x) {
 }
 
 
-/****************************************************
- * Find and notify damaged ship to update ship state
- * If whole ship is crashed then increment counter
- ****************************************************/
+/*******************************************************************
+ * 'notifyShip' - Find and notify damaged ship to update ship state
+ *                If whole ship is crashed then increment counter
+ * @param y - Y coordinate of player step
+ * @param x - X coordinate of player step
+ *******************************************************************/
 void Board::notifyShip(int y, int x) {
 
 	for (int i = 0; i < ships_.size(); i++)
@@ -420,9 +435,10 @@ void Board::notifyShip(int y, int x) {
 	}
 }
 
-/*********************************
- * Check if All ships are crashed
- *********************************/
+/******************************************************************************************
+ * 'isAllShipCrashed' - Check if All ships are crashed
+ * @return bool - true if All ships some of player are already crashed, else return false
+ ******************************************************************************************/
 bool Board::isAllShipCrashed() {
 
 	if (nCrashedShips_ == ships_.size()) {

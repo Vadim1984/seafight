@@ -3,9 +3,14 @@
 
 using namespace std;
 
-/********************************************
- * Constructor set ship size and coordinates
- ********************************************/
+/******************************************************
+ * 'Ship' - Constructor set ship size and coordinates
+ * @param size   - size of Ship
+ * @param startX - X coordinate of start ship
+ * @param endX   - X coordinate of end ship
+ * @param startY - Y coordinate of start ship
+ * @param endY   - Y coordinate of end ship
+ ******************************************************/
 Ship::Ship(int size, int startX, int endX, int startY, int endY)
 {
 	this->size_ = size;
@@ -24,9 +29,13 @@ Ship::~Ship()
 
 
 /***********************************************************************
- * This func check if: 
- * 1) is current ship is damaged 
- * 2) is ship fully or partial damaged and set apropriate indicator
+ * 'damage' - check if: 
+ *            1) is current ship is damaged 
+ *            2) is ship fully or partial damaged and set apropriate indicator
+ *
+ * @param y     - Y coordinate of player step
+ * @param x     - X coordinate of player step
+ * @return bool - true if player hit the ship, else false
  ***********************************************************************/
 bool Ship::damage(int y, int x) {
 
@@ -45,7 +54,7 @@ bool Ship::damage(int y, int x) {
 }
 
 /***********************************************************************
- * Display ship related information 
+ * 'displayShipInfo' - Display ship related information 
  ***********************************************************************/
 void Ship::displayShipInfo() {
 	cout << "*******  Ship info: **********" << endl;

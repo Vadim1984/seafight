@@ -30,8 +30,8 @@ private:
 	static const char SHIP = 254;
 	static const char HIT_SHIP = 'X';
 	char matrix_[SIZE][SIZE];
-	map <string, int> shipsCountMap_;
-	map <string, int> shipsSizeMap_;
+	map <string, int> shipTypeCountMap_;
+	map <string, int> shipsTypeSizeMap_;
 	vector<Ship> ships_;
 	int nCrashedShips_;
 

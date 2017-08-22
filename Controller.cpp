@@ -1,6 +1,10 @@
 #include "Controller.h"
 
 
+
+/*********************************
+ * 'Controller' - Constructor
+ *********************************/
 Controller::Controller()
 {
 	computerBoard_ = new Board();
@@ -11,9 +15,9 @@ Controller::Controller()
 }
 
 
-/********************************
- * func that start the game
- *********************************/
+/*****************************************
+ * 'startGame' - func that start the game
+ *****************************************/
 void Controller::startGame() {
 
 	while (!computerBoard_->isAllShipCrashed()) {
@@ -28,9 +32,9 @@ void Controller::startGame() {
 	computerBoard_->display();
 }
 
-/*******************************************
- * func that allow to make step for player
- *******************************************/
+/*********************************************************
+ * 'playerStep' - func that allow to make step for player
+ *********************************************************/
 void Controller::playerStep() {
 
 	int x, y;
@@ -58,9 +62,9 @@ void Controller::playerStep() {
 	}
 }
 
-/*******************************************
- * func that compute step for pc
- *******************************************/
+/************************************************
+ * 'computerStep' - func that emulate step for pc
+ ************************************************/
 void Controller::computerStep() {                                          //TODO: finish this func
 
 	int x, y;
@@ -79,6 +83,9 @@ void Controller::computerStep() {                                          //TOD
 	}
 }
 
+/*********************************
+* '~Controller' - Destructor
+*********************************/
 Controller::~Controller()
 {
 	delete computerBoard_;
