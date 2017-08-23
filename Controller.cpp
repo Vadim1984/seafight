@@ -1,10 +1,5 @@
 #include "Controller.h"
 
-
-
-/*********************************
- * 'Controller' - Constructor
- *********************************/
 Controller::Controller()
 {
 	computerBoard_ = new Board();
@@ -83,9 +78,6 @@ void Controller::computerStep() {                                          //TOD
 	}
 }
 
-/*********************************
-* '~Controller' - Destructor
-*********************************/
 Controller::~Controller()
 {
 	delete computerBoard_;

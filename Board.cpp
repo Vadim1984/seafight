@@ -3,9 +3,6 @@
 
 using namespace std;
 
-/*************************
- * 'Board' - Constructor
- *************************/
 Board::Board()
 {
 	shipTypeCountMap_ = {
@@ -449,8 +446,4 @@ bool Board::isAllShipCrashed() {
 	}
 
 }
-
-
-
-
 
